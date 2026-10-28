@@ -1,0 +1,31 @@
+/* Quick O 設計（2026-10-28 定案）：霓虹招牌／手寫招牌風 — 紅、湖水綠、金；襯線字（系統字型）；中英雙語標籤；淺色＝日間招牌，深色＝夜間霓虹。其他試用設計已移至 archive/themes/（不上載）。 */
+html[data-theme=e]{--bg:#f6eddc;--surface:#fffaf0;--fg:#2a1a12;--mut:#5c4636;--border:#8c6d3f;--line:#d9c49a;--field:#fffaf0;
+  --accent:#b3121f;--on-accent:#fff;--accent-text:#0d6060;--link:#0d6060;--btn2:#0d6060;--on-btn2:#fff;--demo-bg:#f1e2bf;--demo-fg:#3a2610;
+  --gold:#b08a2e;--title:#b3121f;--glow:none;--radius:4px;--shadow:none;
+  --serif:"Noto Serif TC","Noto Serif CJK TC","Songti TC","PMingLiU",serif;
+  --font:"Noto Sans TC","Noto Sans CJK TC","PingFang HK",sans-serif}
+html[data-theme=e][data-mode=dark]{--bg:#07070d;--surface:#12101c;--fg:#fdf3e7;--mut:#cdbfae;--border:#ffd166;--line:#3a3150;--field:#1a1728;
+  --accent:#ff4f8b;--on-accent:#1a0410;--accent-text:#5ff5e4;--link:#5ff5e4;--btn2:#5ff5e4;--on-btn2:#03201d;--demo-bg:#2a2140;--demo-fg:#fdf3e7;
+  --gold:#ffd166;--title:#ff6b9a;--glow:0 0 4px #ff2f78,0 0 12px #ff2f78aa}
+html[data-theme=e] .top{border-bottom:3px double var(--gold);box-shadow:none}
+html[data-theme=e] h1{font-family:var(--serif);font-weight:900;color:var(--title);font-size:1.5rem;letter-spacing:.06em;text-shadow:var(--glow)}
+html[data-theme=e] h1 small{font-family:var(--font);color:var(--mut);text-shadow:none}
+html[data-theme=e] .en{display:inline;font-family:Georgia,"Times New Roman",serif;font-style:italic}
+html[data-theme=e] .tagline{font-size:.75rem;color:var(--accent-text)}
+html[data-theme=e] .brand{flex-wrap:wrap}
+html[data-theme=e] button.primary{font-family:var(--serif);font-weight:900;font-size:1.1rem;letter-spacing:.1em;border:2px solid var(--gold);box-shadow:inset 0 0 0 2px var(--surface)}
+html[data-theme=e][data-mode=dark] button.primary{box-shadow:0 0 10px #ff2f7899,inset 0 0 0 2px #12101c}
+html[data-theme=e] .legend{border-bottom:3px double var(--gold)}
+html[data-theme=e] .list{gap:12px}
+html[data-theme=e] .card{border:2px solid var(--gold);outline:1px solid var(--gold);outline-offset:-6px;padding:14px 16px}
+html[data-theme=e][data-mode=dark] .card{border-color:var(--gold)}
+html[data-theme=e] .name{font-family:var(--serif);font-size:1.15rem;font-weight:900;color:var(--title);display:flex;flex-direction:column;text-shadow:var(--glow)}
+html[data-theme=e] .name-en{font-size:.8rem;color:var(--mut);font-weight:400;text-shadow:none}
+html[data-theme=e] .dist{font-family:var(--serif);font-size:1.15rem}
+html[data-theme=e][data-mode=dark] .dist{text-shadow:0 0 6px #18e0cc}
+html[data-theme=e] .hero .herolabel{display:block;margin:0 0 6px;font-family:var(--serif);font-weight:900;color:var(--accent-text);letter-spacing:.1em}
+html[data-theme=e] .hero .herolabel .en{margin-left:6px;font-weight:400;letter-spacing:0}
+html[data-theme=e] .hero .dist{font-size:2rem}
+html[data-theme=e][data-mode=dark] .card.hero{box-shadow:0 0 14px #ffd16655}
+html[data-theme=e] .btn{font-family:var(--serif);font-weight:900;letter-spacing:.06em;border:2px solid var(--gold)}
+html[data-theme=e] .foot{border-top:3px double var(--gold)}

@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="zh-Hant-HK" data-theme="e">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#b3121f" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#07070d" media="(prefers-color-scheme: dark)">
+<meta name="description" content="Quick O：以香港政府官方開放數據，找出最近的公廁並一按步行導航。">
+<title>Quick O（MVP）— 搵最近公廁</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 32 32%22%3E%3Ccircle cx=%2216%22 cy=%2216%22 r=%2215%22 fill=%22%23b3121f%22/%3E%3Ctext x=%2216%22 y=%2222%22 font-size=%2216%22 text-anchor=%22middle%22 fill=%22white%22%3EO%3C/text%3E%3C/svg%3E">
+<link rel="preload" href="data/toilets.json" as="fetch" crossorigin="anonymous">
+<link rel="stylesheet" href="vendor/leaflet/leaflet.css">
+<link rel="stylesheet" href="vendor/markercluster/MarkerCluster.css">
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="theme.css">
+<script>/* 設計：霓虹招牌風（theme.css）。顏色模式：自動（跟手機設定）／淺色／深色，記於 localStorage。測試可用 ?mode=light|dark */
+(function(){var q=new URLSearchParams(location.search),d=document.documentElement;
+var pref;try{pref=localStorage.getItem('qo_mode')}catch(e){}pref=q.get('mode')||pref||'auto';
+var mq=window.matchMedia('(prefers-color-scheme: dark)');
+window.__applyMode=function(p){pref=p||pref;d.setAttribute('data-mode-pref',pref);d.setAttribute('data-mode',pref==='auto'?(mq.matches?'dark':'light'):pref);};
+mq.addEventListener&&mq.addEventListener('change',function(){if(pref==='auto')window.__applyMode();});
+window.__applyMode(pref);})();</script>
+</head>
+<body>
+<a class="skip" href="#list">跳到廁所列表</a>
+<header class="top">
+  <div class="brand"><h1>Quick O <small>MVP</small></h1><span class="en tagline" lang="en">Hong Kong Toilet Finder</span>
+  <fieldset class="mode"><legend class="vh">顏色模式</legend>
+    <label><input type="radio" name="mode" value="auto"><span>自動</span></label><label><input type="radio" name="mode" value="light"><span>淺色</span></label><label><input type="radio" name="mode" value="dark"><span>深色</span></label>
+  </fieldset></div>
+  <div class="controls">
+    <button id="locate" class="primary" type="button"><span aria-hidden="true">📍</span> 搵最近廁所</button>
+    <label class="sel"><span class="vh">地區</span>
+      <select id="district"><option value="">或選擇地區…</option></select></label>
+    <label class="sel"><span class="vh">類別</span>
+      <select id="type"><option value="">全部類別</option></select></label>
+    <label class="chk"><input type="checkbox" id="hideSuspended" checked> 隱藏暫停服務</label>
+  </div>
+  <p id="status" class="status" role="status" aria-live="polite">按「搵最近廁所」使用定位；或選擇地區／點按地圖設定位置。</p>
+</header>
+<div class="mapwrap">
+  <div id="map" role="region" aria-label="廁所地圖（可用兩指縮放；點按標記看詳情；點按地圖設定位置）"></div>
+  <div id="loading" class="loading" role="status" aria-live="polite"><span class="spin" aria-hidden="true"></span><span id="loadingText">正在載入地圖及官方數據…</span></div>
+</div>
+<div id="legend" class="legend" role="region" aria-label="地圖圖例"></div>
+<main>
+  <h2 class="vh" id="listTitle">最近的廁所</h2>
+  <ol id="list" class="list" aria-labelledby="listTitle"></ol>
+</main>
+<footer id="footer" class="foot"></footer>
+<template id="card">
+  <li class="card">
+    <p class="herolabel">最近你的廁所 <span class="en" lang="en">Nearest</span></p>
+    <div class="row1"><h3 class="name"><button type="button" class="link showOnMap"></button><span class="en name-en" lang="en"></span></h3><span class="dist"></span></div>
+    <div class="meta"></div>
+    <div class="addr"></div>
+    <div class="warn" hidden></div>
+    <dl class="facts"></dl>
+    <div class="nav">
+      <a class="btn gmaps" target="_blank" rel="noopener">Google 地圖步行</a>
+      <a class="btn amaps" target="_blank" rel="noopener">Apple 地圖步行</a>
+    </div>
+    <details class="review">
+      <summary>星級評分 <span class="avg"></span> <em class="demo">本機示範，未上載</em></summary>
+      <fieldset class="stars"><legend>評分（1–5 星）</legend></fieldset>
+      <button class="save" type="button">儲存評分（只存於此裝置）</button>
+      <p class="revs"></p>
+    </details>
+  </li>
+</template>
+<script src="vendor/leaflet/leaflet.js"></script>
+<script src="vendor/markercluster/leaflet.markercluster.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

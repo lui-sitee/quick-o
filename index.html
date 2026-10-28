@@ -6,9 +6,14 @@
 <meta name="theme-color" content="#b3121f" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#07070d" media="(prefers-color-scheme: dark)">
 <meta name="description" content="Quick O：以香港政府官方開放數據，找出最近的公廁並一按步行導航。">
-<title>Quick O（MVP）— 搵最近公廁</title>
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 32 32%22%3E%3Ccircle cx=%2216%22 cy=%2216%22 r=%2215%22 fill=%22%23b3121f%22/%3E%3Ctext x=%2216%22 y=%2222%22 font-size=%2216%22 text-anchor=%22middle%22 fill=%22white%22%3EO%3C/text%3E%3C/svg%3E">
+<title>Quick O｜搵最近公廁</title>
+<link rel="icon" href="assets/favicon-32.png" sizes="32x32" type="image/png">
+<link rel="icon" href="assets/icon-c.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<link rel="manifest" href="manifest.webmanifest">
 <link rel="preload" href="data/toilets.json" as="fetch" crossorigin="anonymous">
+<link rel="preload" href="data/babycare.json" as="fetch" crossorigin="anonymous">
+<link rel="preload" href="data/had_accessible.json" as="fetch" crossorigin="anonymous">
 <link rel="stylesheet" href="vendor/leaflet/leaflet.css">
 <link rel="stylesheet" href="vendor/markercluster/MarkerCluster.css">
 <link rel="stylesheet" href="style.css">
@@ -22,22 +27,40 @@ mq.addEventListener&&mq.addEventListener('change',function(){if(pref==='auto')wi
 window.__applyMode(pref);})();</script>
 </head>
 <body>
-<a class="skip" href="#list">跳到廁所列表</a>
+<a class="skip" href="#nearest3">跳到最近的廁所</a>
 <header class="top">
-  <div class="brand"><h1>Quick O <small>MVP</small></h1><span class="en tagline" lang="en">Hong Kong Toilet Finder</span>
+  <div class="brand"><h1 class="logo"><img class="lg-l" src="assets/logo-1-light.svg" width="200" height="52" alt="Quick O"><img class="lg-d" src="assets/logo-1-dark.svg" width="200" height="52" alt="Quick O"></h1>
   <fieldset class="mode"><legend class="vh">顏色模式</legend>
     <label><input type="radio" name="mode" value="auto"><span>自動</span></label><label><input type="radio" name="mode" value="light"><span>淺色</span></label><label><input type="radio" name="mode" value="dark"><span>深色</span></label>
   </fieldset></div>
+  <p class="slogan">人有三急，Quick O</p>
+  <p class="slogan2">最近的廁所，一按導航 <span class="en" lang="en">Hong Kong Toilet Finder</span></p>
+  <p class="datanote">數據來自政府開放數據（DATA.GOV.HK）：食環署、漁護署、衞生署 <a href="#footer">查看來源</a></p>
+  <p id="offline" class="offline" role="status" hidden></p>
+</header>
+<section class="quick" aria-labelledby="qTitle">
+  <h2 class="vh" id="qTitle">即時搵廁所</h2>
+  <button id="urgent" class="urgent" type="button"><span class="big" aria-hidden="true">急</span><span class="urgent-txt"><b>急！帶我去最近的廁所</b><span id="urgentSub">一按即開步行導航</span></span></button>
+  <div class="qf" role="group" aria-label="快速篩選">
+    <button type="button" class="qbtn" id="fOpen" aria-pressed="true">開放中</button>
+    <button type="button" class="qbtn" id="fAccess" aria-pressed="false">無障礙</button>
+    <button type="button" class="qbtn" id="fBaby" aria-pressed="false">育嬰</button>
+  </div>
+  <p id="qnote" class="qnote" hidden></p>
+  <h3 class="vh" id="n3Title">最近 3 個地點</h3>
+  <ol id="nearest3" class="n3" aria-labelledby="n3Title"></ol>
   <div class="controls">
-    <button id="locate" class="primary" type="button"><span aria-hidden="true">📍</span> 搵最近廁所</button>
+    <button id="locate" class="primary" type="button"><span aria-hidden="true">📍</span> 搵最近廁所（定位）</button>
     <label class="sel"><span class="vh">地區</span>
       <select id="district"><option value="">或選擇地區…</option></select></label>
     <label class="sel"><span class="vh">類別</span>
       <select id="type"><option value="">全部類別</option></select></label>
     <label class="chk"><input type="checkbox" id="hideSuspended" checked> 隱藏暫停服務</label>
+    <label class="chk"><input type="checkbox" id="showBabycare" checked> 顯示育嬰間</label>
+    <label class="chk"><input type="checkbox" id="showHad" checked> 顯示社區會堂無障礙洗手間</label>
   </div>
-  <p id="status" class="status" role="status" aria-live="polite">按「搵最近廁所」使用定位；或選擇地區／點按地圖設定位置。</p>
-</header>
+  <p id="status" class="status" role="status" aria-live="polite">正在載入…</p>
+</section>
 <div class="mapwrap">
   <div id="map" role="region" aria-label="廁所地圖（可用兩指縮放；點按標記看詳情；點按地圖設定位置）"></div>
   <div id="loading" class="loading" role="status" aria-live="polite"><span class="spin" aria-hidden="true"></span><span id="loadingText">正在載入地圖及官方數據…</span></div>

@@ -49,7 +49,7 @@ html[data-mode=dark] .leaflet-container{background:#1b1f27}
 @media (prefers-reduced-motion:reduce){.spin{animation:none}}
 /* 標記：32px 觸控目標，顏色＋文字雙重提示 */
 .mk{width:32px;height:32px;border-radius:50%;border:2px solid #fff;box-shadow:0 1px 3px #0006;color:#fff;font:700 14px/28px sans-serif;text-align:center}
-.mk.t0,.badge.t0{background:#0b6e4f}.mk.t1,.badge.t1{background:#1d4ed8}.mk.t2,.badge.t2{background:#6d28d9}.mk.t3,.badge.t3{background:#4d7c0f}
+.mk.t0,.badge.t0{background:#0b6e4f}.mk.t1,.badge.t1{background:#1d4ed8}.mk.t2,.badge.t2{background:#6d28d9}.mk.t3,.badge.t3{background:#4d7c0f}.mk.tb,.badge.tb{background:#9d174d}.mk.th,.badge.th{background:#9a3412}
 .mk.sus{border:3px solid #b42318;box-shadow:0 0 0 2px #fff,0 1px 3px #0006}
 .cl{width:40px;height:40px;border-radius:50%;background:#1b1b1b;color:#fff;border:3px solid #fff;box-shadow:0 1px 4px #0007;font:700 14px/34px sans-serif;text-align:center}
 .legend{background:var(--surface);padding:4px 10px;font-size:.78rem;line-height:1.5;color:var(--fg);border-bottom:1px solid var(--line)}
@@ -92,3 +92,57 @@ html[data-mode=dark] .card{border:1px solid var(--line)}
 .leaflet-control-attribution{background:color-mix(in srgb,var(--surface) 94%,transparent)!important;color:var(--fg)}
 .leaflet-popup-content-wrapper,.leaflet-popup-tip{background:var(--surface);color:var(--fg)}
 .leaflet-popup-content{font-size:.85rem}
+/* 育嬰間彈出視窗：導航按鈕 44px、其他連結觸控目標 ≥ 24px */
+.pnav{display:flex;margin:6px 0 4px}.pnav .btn{min-height:44px;padding:4px 8px;text-decoration:none!important}
+.plink,.psrc a{display:inline-block;min-height:24px;line-height:24px}.psrc{display:block;margin-top:2px}
+/* ===== 2026-10-28 發佈版：logo、口號、即時答案、快速篩選、地圖針標記、回報問題、離線提示 ===== */
+.top{position:relative}
+.logo{margin:0;line-height:0}.logo img{height:52px;width:auto;max-width:62vw}
+.lg-d{display:none!important}html[data-mode=dark] .lg-d{display:inline-block!important}html[data-mode=dark] .lg-l{display:none!important}
+.slogan{margin:2px 0 0;font-size:1.45rem;font-weight:900;line-height:1.25;color:var(--title,var(--accent-text))}
+.slogan2{margin:0;font-size:.85rem;color:var(--mut)}
+.datanote{margin:4px 0 0;font-size:.78rem;color:var(--mut)}
+.datanote a{color:var(--link);text-decoration:underline;display:inline-block;min-height:24px;line-height:24px}
+.offline{margin:6px 0 0;padding:6px 8px;border-radius:8px;background:var(--warn-bg);color:var(--warn-fg);font-size:.85rem;font-weight:700}
+.offline[hidden]{display:none}
+.quick{background:var(--surface);padding:8px 12px 6px}
+.urgent{display:flex;align-items:center;gap:12px;width:100%;min-height:76px;padding:8px 12px;background:var(--accent);color:var(--on-accent);border:2px solid var(--accent);text-align:left;cursor:pointer}
+.urgent .big{flex:0 0 56px;height:56px;border-radius:50%;border:3px solid currentColor;display:flex;align-items:center;justify-content:center;font-size:2rem;font-weight:900;line-height:1}
+.urgent-txt{display:flex;flex-direction:column;min-width:0}.urgent-txt b{font-size:1.2rem}
+#urgentSub{font-size:.82rem;overflow:hidden;text-overflow:ellipsis}
+.qf{display:flex;gap:6px;margin:8px 0 4px}
+.qbtn{flex:1;min-height:48px;font-weight:700;cursor:pointer;background:var(--field);color:var(--fg)}
+.qbtn[aria-pressed=true]{background:var(--btn2);color:var(--on-btn2);border-color:var(--btn2)}
+.qbtn[aria-pressed=true]::before{content:"✓ "}
+.qnote{margin:4px 0;font-size:.8rem;color:var(--warn-fg);background:var(--warn-bg);border-radius:8px;padding:4px 8px}
+.qnote[hidden]{display:none}
+.n3{list-style:none;margin:6px 0 8px;padding:0;display:grid;gap:6px}
+.n3 li{display:grid;grid-template-columns:1fr auto auto;gap:8px;align-items:center;border:1px solid var(--line);border-radius:8px;padding:6px 6px 6px 10px}
+.n3 li.n3empty{display:block;font-size:.85rem;color:var(--mut)}
+.n3info{display:flex;flex-direction:column;min-width:0}
+.n3name{font-weight:800;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.n3meta{font-size:.75rem;color:var(--mut)}
+.n3dist{font-weight:800;color:var(--accent-text);text-align:right;white-space:nowrap;display:flex;flex-direction:column}
+.n3dist small{font-weight:400;font-size:.7rem;color:var(--mut)}
+.n3go{min-height:52px;min-width:88px;display:flex;align-items:center;justify-content:center;border-radius:10px;background:var(--btn2);color:var(--on-btn2);font-weight:900;text-decoration:none;padding:0 10px;border:2px solid var(--btn2)}
+/* 地圖針：32×40 觸控範圍；白色外框＋陰影使針形在淺色及深色底圖均 ≥ 3:1；字母白色 */
+.pinwrap{background:none;border:0}
+.pin{position:relative;display:inline-block;width:32px;height:40px;filter:drop-shadow(0 1px 1.5px #000a)}
+.pin svg{display:block}.pin path{stroke:#fff;stroke-width:2}
+.pin b{position:absolute;left:0;right:0;top:5px;text-align:center;color:#fff;font:900 15px/20px "Noto Sans TC","PingFang HK",sans-serif}
+.pin.t0 path{fill:#0b6e4f}.pin.t1 path{fill:#1d4ed8}.pin.t2 path{fill:#6d28d9}.pin.t3 path{fill:#4d7c0f}.pin.tb path{fill:#9d174d}.pin.th path{fill:#9a3412}
+.ploc{display:inline-block;font-weight:700;margin:.15em 0}
+.pin.sus path{stroke:#b42318;stroke-width:3.5}
+.legend .pin{width:20px;height:25px;vertical-align:middle;margin-right:4px}.legend .pin svg{width:20px;height:25px}
+.legend .pin b{top:2px;font-size:10px;line-height:14px}
+.legend .me{display:inline-block;vertical-align:middle;margin-right:4px}
+.me{display:block}.legend .me.lg-d{display:none}
+.pwarn{color:var(--warn-fg)}
+.report{margin-top:6px;padding-top:6px;border-top:1px dashed var(--line)}
+.report .tel{display:inline-block;min-height:32px;line-height:32px;font-weight:700}
+.rtags{display:flex;gap:4px;margin:4px 0}
+.rtag{min-height:36px;padding:2px 8px;font-size:.8rem;cursor:pointer}
+.rtag[aria-pressed=true]{background:var(--btn2);color:var(--on-btn2);border-color:var(--btn2)}
+.rtag[aria-pressed=true]::before{content:"✓ "}
+.rnote{display:block;color:var(--mut)}
+.foot-h{font-size:.9rem;margin:0 0 4px;color:var(--fg)}

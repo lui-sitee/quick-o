@@ -1,6 +1,6 @@
 /* Quick O service worker：離線快取 app 外殼、vendor 檔案及官方數據 JSON。
    每次發佈新版本請更新 VERSION，啟用時會刪除舊快取（舊數據不會殘留）。全部相對路徑，適用於 /quick-o/ 子路徑。 */
-const VERSION = 'quick-o-2026-10-28-r2';
+const VERSION = 'quick-o-2026-10-28-r3';
 const SHELL = ['./', 'index.html', 'app.js', 'style.css', 'theme.css', 'manifest.webmanifest',
   'vendor/leaflet/leaflet.css', 'vendor/leaflet/leaflet.js', 'vendor/markercluster/MarkerCluster.css', 'vendor/markercluster/leaflet.markercluster.js',
   'assets/logo-1-light.svg', 'assets/logo-1-dark.svg', 'assets/logo-2-light.svg', 'assets/logo-2-dark.svg', 'assets/icon-c.svg',

@@ -54,8 +54,9 @@ function hours(t) {
 }
 const hoursLabel = t => { const s = hours(t); return s.known ? s.label : HRS_UNKNOWN; };
 
-// ---- 本機資料（localStorage，不上載）：星級評分、問題回報標籤 ----
-const RKEY = 'hktm_reviews_demo_v1', PKEY = 'qo_reports_v1';
+// ---- 本機資料（localStorage，不上載）：問題回報標籤 ----
+const PKEY = 'qo_reports_v1';
+try { localStorage.removeItem('hktm_reviews_demo_v1'); } catch (e) {} // 清理已移除功能的舊本機資料（2026-10-28）
 const loadJ = k => { try { return JSON.parse(localStorage.getItem(k)) || {}; } catch { return {}; } };
 const saveJ = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} };
 const TAGS = ['已關閉', '位置不對', '很髒'];
@@ -187,7 +188,7 @@ function renderList() {
   const list = $('#list'); list.innerHTML = '';
   if (!origin) { list.innerHTML = '<li class="card">請先定位、選擇地區或點按地圖，即可列出最近的地點。</li>'; return 0; }
   const items = ranked().slice(0, LIST_N);
-  const revs = loadJ(RKEY), tpl = $('#card');
+  const tpl = $('#card');
   for (const { t, d } of items) {
     const li = tpl.content.firstElementChild.cloneNode(true), nm = nameOf(t);
     const nb = li.querySelector('.showOnMap'); nb.textContent = nm; nb.setAttribute('aria-label', `${nm}：在地圖上顯示`);
@@ -202,29 +203,9 @@ function renderList() {
     const g = li.querySelector('.gmaps'), a = li.querySelector('.amaps');
     g.href = gUrl(t); a.href = aUrl(t);
     nb.addEventListener('click', () => { const m = markers.get(t.id); if (m) layer.zoomToShowLayer(m, () => m.openPopup()); else map.setView([t.lat, t.lng], 18); document.getElementById('map').scrollIntoView({ behavior: 'smooth' }); });
-    if (t.kind === 'baby') li.querySelector('.review').remove(); else setupReview(li, t, revs);
     list.appendChild(li);
   }
   return items.length;
-}
-
-// 只限星級評分（1–5），每部裝置每個廁所一個評分，存於 localStorage，未上載
-function setupReview(li, t, revs) {
-  const r = revs[t.id], mine = r && r.stars ? r : Array.isArray(r) && r.length ? r[r.length - 1] : null;
-  li.querySelector('.avg').textContent = mine ? `你的評分 ★${mine.stars}` : '';
-  li.querySelector('.revs').textContent = mine ? `你在 ${mine.date} 給了 ${mine.stars} 星（只存於此裝置）` : '';
-  let stars = mine ? mine.stars : 0; const box = li.querySelector('.stars');
-  for (let i = 1; i <= 5; i++) {
-    const lab = document.createElement('label'); if (i <= stars) lab.classList.add('on');
-    lab.innerHTML = `<input type="radio" name="st-${t.id}" value="${i}"${i === stars ? ' checked' : ''}><span aria-hidden="true">★</span><span class="vh">${i} 星</span>`;
-    lab.querySelector('input').onchange = () => { stars = i; [...box.querySelectorAll('label')].forEach((c, j) => c.classList.toggle('on', j < i)); };
-    box.appendChild(lab);
-  }
-  li.querySelector('.save').onclick = () => {
-    if (!stars) { $('#status').textContent = '請先揀星數，再儲存。'; box.querySelector('input').focus(); return; }
-    const all = loadJ(RKEY); all[t.id] = { stars, date: new Date().toLocaleDateString('zh-HK') };
-    saveJ(RKEY, all); renderList(); $('#status').textContent = `已儲存 ${stars} 星評分在此裝置（本機示範，未上載）。`;
-  };
 }
 
 function setOrigin(lat, lng, label, zoom = 16) {
@@ -254,7 +235,7 @@ function footer() {
   const hs = HAD ? `<br><a href="${esc(HAD.source.page)}" target="_blank" rel="noopener">${esc(HAD.source.name)}</a>（${esc(HAD.source.publisher)}；${esc(HAD.source.updated)}）— 只收錄官方標明有暢通易達洗手間的社區會堂／社區中心 ${HAD.count} 個；位置為所在建築，非洗手間本身；官方未提供開放時間` : '';
   $('#footer').innerHTML = `<h2 class="foot-h">數據來源</h2>DATA.GOV.HK — ${s}${bs}${hs}<br>共 ${DATA.count} 個廁所（${DATA.count_with_coords} 個有官方座標）；資料整理於 ${esc(DATA.generated)}。
     使用須遵守 <a href="${esc(DATA.terms)}" target="_blank" rel="noopener">DATA.GOV.HK 使用條款</a>；資料版權屬香港特區政府及相關部門，不保證準確或最新，前往前請留意現場告示。<br>
-    開放時間只採用官方文字（24 小時或明確時段）；其他顯示「${HRS_UNKNOWN}」。食環署／漁護署廁所的無障礙、嬰兒護理等設施：${NA}；「無障礙」篩選只顯示官方標明有暢通易達洗手間的地點。星級評分及問題標記只存於此裝置，未上載。<br>
+    開放時間只採用官方文字（24 小時或明確時段）；其他顯示「${HRS_UNKNOWN}」。食環署／漁護署廁所的無障礙、嬰兒護理等設施：${NA}；「無障礙」篩選只顯示官方標明有暢通易達洗手間的地點。問題標記只存於此裝置，未上載。<br>
     地圖 © <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> 貢獻者`;
 }
 
